@@ -1,17 +1,37 @@
 # Deployment Guide
 
-## Backend + Database on Render
+## Backend + Database on Render (Docker — recommended)
 
 1. Push this repository to GitHub.
 2. In Render:
    - Create a PostgreSQL database service.
-   - Create a Web Service for `backend/`.
-3. Backend settings:
-   - Build Command: `pip install -r requirements.txt`
-   - Start Command: `alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-4. Set env vars:
-   - `DATABASE_URL` = Render postgres internal connection string using `postgresql+psycopg2://...`
-   - `CORS_ORIGINS` = frontend URL (Vercel)
+   - Create a **Blueprint** from `render.yaml`, **or** create a Web Service manually:
+     - **Environment:** Docker
+     - **Dockerfile Path:** `backend/Dockerfile`
+     - **Docker Context:** `backend`
+3. Set environment variables on the web service:
+   - `DATABASE_URL` = Render Postgres URL with `postgresql+psycopg2://...` prefix
+   - `CORS_ORIGINS` = your Vercel frontend URL (comma-separated if multiple)
+4. Deploy and verify:
+   - `https://<render-app>.onrender.com/health` → `{"status":"ok"}`
+   - `https://<render-app>.onrender.com/docs`
+
+### Manual Render settings (if not using Blueprint)
+
+| Setting | Value |
+|---------|--------|
+| Language / Environment | **Docker** |
+| Dockerfile Path | `backend/Dockerfile` |
+| Docker Context / Root | `backend` |
+
+Do **not** use `pip install -r requirements.txt` as the build command when using Docker; the Dockerfile handles dependencies.
+
+### Alternative: native Python (no Docker)
+
+If you prefer `env: python` on Render, leave root directory empty and use:
+
+- **Build Command:** `pip install -r backend/requirements.txt`
+- **Start Command:** `cd backend && alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT`
 
 ## Frontend on Vercel
 

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Inventory & Order Management System
 
 Full-stack application for managing products, customers, orders, and inventory.
@@ -60,3 +61,6 @@ Configure:
 
 - Backend: `DATABASE_URL`, `CORS_ORIGINS`
 - Frontend: `VITE_API_BASE_URL`
+=======
+# Production-Ready-Containerized-Inventory-Order-Management-System
+>>>>>>> 8e41169929aeafd41432251f5803ba02ad1d4177
